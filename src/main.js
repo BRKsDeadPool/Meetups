@@ -8,12 +8,15 @@ import vuetify from 'vuetify'
 import dateFilter from '@/filter/date'
 import '@/assets/stylus/main.styl'
 import * as firebase from 'firebase'
+import alertComponent from './shared/Alert.vue'
 
 Vue.use(vuetify)
 
 Vue.config.productionTip = false
 
 Vue.filter('date', dateFilter)
+
+Vue.component('app-alert', alertComponent)
 
 /* eslint-disable no-new */
 new Vue({

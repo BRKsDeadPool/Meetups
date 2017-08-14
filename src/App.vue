@@ -1,34 +1,31 @@
 <script>
-export default {
-  data: () => ({
-    sideNav: false,
-    items: [
-      { title: 'Ver Encontros', icon: 'supervisor_account', to: '/meetups' },
-      { title: 'Organizar Encontro', icon: 'room', to: '/meetup/new' },
-      { title: 'Perfil', icon: 'person', to: '/profile' },
-      { title: 'Registre-se', icon: 'face', to: '/signup' },
-      { title: 'Logue-se', icon: 'lock_open', to: '/signin' },
-    ],
-    transitionName: 'fade'
-  })
-}
+  export default {
+    data: () => ({
+      sideNav: false,
+      transitionName: 'fade'
+    }),
+    computed: {
+      items() {
+        let items = [
+          {title: 'Ver Encontros', icon: 'supervisor_account', to: '/meetups'},
+          {title: 'Registre-se', icon: 'face', to: '/signup'},
+          {title: 'Logue-se', icon: 'lock_open', to: '/signin'},
+        ]
+        if (this.authUser) {
+          items = [
+            {title: 'Ver Encontros', icon: 'supervisor_account', to: '/meetups'},
+            {title: 'Organizar Encontro', icon: 'room', to: '/meetup/new'},
+            {title: 'Perfil', icon: 'person', to: '/profile'}
+          ]
+        }
+        return items
+      },
+      authUser() {
+        return this.$store.getters.user !== null && this.$store.getters.user !== 'undefined'
+      }
+    }
+  }
 </script>
-
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition-property: opacity;
-  transition-duration: .25s;
-}
-
-.fade-enter-active {
-  transition-delay: .25s;
-}
-
-.fade-enter, .fade-leave-active {
-  opacity: 0
-}
-</style>
-
 
 <template>
   <v-app>
@@ -40,6 +37,10 @@ export default {
           </v-list-tile-action>
           <v-list-tile-content>
             {{ item.title }}
+
+
+
+
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -54,6 +55,10 @@ export default {
         <v-btn v-for="(item, i) in items" :key="i" flat :to="item.to">
           <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
+
+
+
+
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>

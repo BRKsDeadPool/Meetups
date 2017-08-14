@@ -9,23 +9,46 @@
     }),
     methods: {
       onSignup () {
-        console.log({
+        this.$store.dispatch('signUserUp', {
           email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirmation
+          password: this.password
         })
+      },
+      onDismissed() {
+        this.$store.dispatch('clearAuthError')
       }
     },
     computed: {
       comparePasswords() {
         return this.password !== this.password_confirmation ? 'As senhas não são iguais!' : ''
+      },
+      user() {
+          return this.$store.getters.user
+      },
+      error() {
+          return this.$store.getters.authError
+      },
+      loading() {
+          return this.$store.getters.loading
       }
+    },
+    watch: {
+        user(value) {
+            if (value !== null && value !== 'undefined') {
+                this.$router.push('/')
+            }
+        }
     }
   }
 </script>
 
 <template>
   <v-container>
+    <v-layout row v-if="error">
+      <v-flex xs12 sm6 offset-sm3>
+        <app-alert @dismissed="onDismissed">{{ error.message }}</app-alert>
+      </v-flex>
+    </v-layout>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
@@ -62,14 +85,18 @@
                                   v-model="password_confirmation"
                                   :rules="[comparePasswords]"
                                   :type="p2 ? 'password' : 'text'"
-                                  required
                                   :append-icon="p2 ? 'visibility' : 'visibility_off'"
                                   :append-icon-cb="() => (p2 = !p2)"></v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
                   <v-flex xs12>
-                    <v-btn type="submit">Registrar</v-btn>
+                    <v-btn type="submit" :loading="loading" :disabled="loading">
+                      <span class="custom-loader" slot="loader">
+                        <v-icon light>cached</v-icon>
+                      </span>
+                      Registrar
+                    </v-btn>
                   </v-flex>
                 </v-layout>
               </form>
