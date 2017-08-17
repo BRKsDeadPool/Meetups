@@ -37,6 +37,8 @@ export default {
         date
       }
 
+      /** TODO: Continue here*/
+
       firebase.database().ref('meetups').push(meetup)
         .then((data) => {
           console.log(data)
