@@ -79,8 +79,7 @@
                       <span class="custom-loader" slot="loader">
                         <v-icon light>cached</v-icon>
                       </span>
-                      Registrar
-
+                      Entrar
                     </v-btn>
                   </v-flex>
                 </v-layout>

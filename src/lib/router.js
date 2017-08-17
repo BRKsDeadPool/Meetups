@@ -1,4 +1,5 @@
 import Router from 'vue-router'
+import store from './store'
 import Vue from 'vue'
 
 Vue.use(Router)
@@ -17,7 +18,14 @@ files.keys().forEach(file => {
   routes.push(moduleData)
 })
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  store.dispatch('clearAuthError')
+  next()
+})
+
+export default router
