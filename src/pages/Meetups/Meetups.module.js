@@ -1,3 +1,5 @@
+import * as firebase from 'firebase'
+
 export default {
   state: {
     loadedMeetups: [
@@ -27,16 +29,22 @@ export default {
   actions: {
     addMeetup({commit}, payload) {
       let {title, imageUrl, location, description, date} = payload
-      let id = new Date().getTime();
-
-      commit('ADD_MEETUP', {
+      let meetup = {
         title,
         imageUrl,
         location,
         description,
-        date,
-        id
-      })
+        date
+      }
+
+      firebase.database().ref('meetups').push(meetup)
+        .then((data) => {
+          console.log(data)
+          commit('ADD_MEETUP', data)
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   getters: {

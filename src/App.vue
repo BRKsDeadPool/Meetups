@@ -37,10 +37,6 @@
           </v-list-tile-action>
           <v-list-tile-content>
             {{ item.title }}
-
-
-
-
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -55,10 +51,6 @@
         <v-btn v-for="(item, i) in items" :key="i" flat :to="item.to">
           <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
-
-
-
-
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
