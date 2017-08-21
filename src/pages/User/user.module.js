@@ -53,20 +53,27 @@ export default {
         })
     },
     signUserOut ({commit}) {
-      firebase.auth().signOut()
-        .then(user => {
-          commit('SET_USER', null)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      return new Promise((resolve, reject) => {
+        firebase.auth().signOut()
+          .then(user => {
+            commit('SET_USER', null)
+            resolve(null)
+          })
+          .catch(error => {
+            console.log(error)
+            reject(error)
+          })
+      })
     },
     setAuthError({commit}, payload) {
       commit('SET_AUTH_ERROR', payload)
     },
+    autoSignin({commit}, payload) {
+      commit('SET_USER', payload)
+    },
     clearAuthError({commit}) {
       commit('CLEAR_AUTH_ERROR')
-    }
+    },
   },
   getters: {
     user (state) {

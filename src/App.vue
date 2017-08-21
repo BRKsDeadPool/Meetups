@@ -23,6 +23,14 @@
       authUser() {
         return this.$store.getters.user !== null && this.$store.getters.user !== 'undefined'
       }
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('signUserOut')
+              .then(() => {
+                this.$router.push('/')
+              })
+        }
     }
   }
 </script>
@@ -39,6 +47,14 @@
             {{ item.title }}
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-show="authUser" @click="logout">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            Sair
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar class="primary" dark>
@@ -51,6 +67,10 @@
         <v-btn v-for="(item, i) in items" :key="i" flat :to="item.to">
           <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
+        </v-btn>
+        <v-btn flat v-show="authUser" @click="logout">
+          <v-icon left dark>exit_to_app</v-icon>
+          Sair
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>

@@ -3,5 +3,8 @@ import component from './Profile.vue'
 export default {
   path: '/profile',
   name: 'Profile',
-  component
+  component,
+  meta: {
+    auth: true
+  }
 }
