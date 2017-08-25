@@ -31,6 +31,13 @@ router.beforeEach((to, from, next) => {
       })
     }
   }
+  if (to.meta.guest) {
+    if ($store.getters.user) {
+      next({
+        name: 'Home'
+      })
+    }
+  }
   $store.dispatch('clearAuthError')
   next()
 })

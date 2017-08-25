@@ -35,10 +35,10 @@ export default {
   <v-container>
     <v-layout row wrap>
       <v-flex xs12 sm6 class="text-xs-center text-sm-right">
-        <v-btn class="info" large to="/meetups">Explorar Encontros</v-btn>
+        <v-btn class="info" large to="/meetups">Explorar Rolês</v-btn>
       </v-flex>
       <v-flex xs12 sm6 class="text-xs-center text-sm-left">
-        <v-btn class="info" large to="/meetup/new">Organizar Encontro</v-btn>
+        <v-btn class="info" large to="/meetup/new">Organizar Rolê</v-btn>
       </v-flex>
     </v-layout>
     <v-layout row v-if="loading">
@@ -58,7 +58,7 @@ export default {
     </v-layout>
     <v-layout row wrap class="mt-2">
       <v-flex xs12 class="text-xs-center">
-        <p>Junte-se aos encontros!</p>
+        <p>Junte-se aos rolês!</p>
       </v-flex>
     </v-layout>
   </v-container>

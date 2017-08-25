@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <v-container>
+  <v-container v-if="meetup">
     <v-layout row wrap>
       <v-flex xs12>
         <v-card>
@@ -20,7 +20,9 @@
           <v-card-media :src="meetup.imageUrl" height="400px"></v-card-media>
           <v-card-text>
             <div class="info--text">{{ meetup.date | date }} - {{ meetup.location }}</div>
-            <div>{{ meetup.description }}</div>
+            <div>
+              <p v-html="meetup.description.replace('\n', '<br/>')"></p>
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

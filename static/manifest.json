@@ -1,6 +1,6 @@
 {
-  "name": "weather",
-  "short_name": "weather",
+  "name": "XFind Meetups",
+  "short_name": "Meetups",
   "icons": [
     {
       "src": "/static/img/icons/android-chrome-192x192.png",
@@ -16,6 +16,6 @@
   "start_url": "/",
   "display": "fullscreen",
   "background_color": "#000000",
-  "theme_color": "#4DBA87",
+  "theme_color": "#730000",
   "orientation": "portrait"
 }
