@@ -22,13 +22,13 @@
     <meta name="msapplication-TileImage" content="/static/img/icons/msapplication-icon-144x144.png">
     <meta name="msapplication-TileColor" content="#730000">
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+    <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet" type="text/css">
     <% for (var chunk of webpack.chunks) {
         for (var file of chunk.files) {
           if (file.match(/\.(js|css)$/)) { %>
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>">
 
     <% }}} %>
-
   </head>
   <body>
     <div id="app">This is your fallback content in case JavaScript fails to load.</div>

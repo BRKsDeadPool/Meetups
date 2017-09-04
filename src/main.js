@@ -21,6 +21,8 @@ Vue.filter('mobileDate', mobileDateFilter)
 
 Vue.component('app-alert', alertComponent)
 
+window.fire = firebase
+
 Vue.use(VueAnalitycs, {
   id: 'UA-105253670-1',
   router,
@@ -58,12 +60,26 @@ const app = new Vue({
         }
       })
 
+    lf.getItem('myMeetups')
+      .then(value => {
+        if(value === null) {
+          lf.setItem('myMeetups', [])
+        }
+      })
+
     let connRef = firebase.database().ref('.info/connected')
 
     connRef.on('value', snap => {
       if (snap.val() === true) {
         this.$store.dispatch('setOffline', false)
         this.$store.dispatch('loadMeetups')
+        firebase.database().ref('meetups')
+          .on('child_changed', child => {
+            let meetup = child.val()
+            meetup.id = child.key
+
+            this.$store.dispatch('updateMeetup', meetup)
+          })
       } else {
         this.$store.dispatch('setOffline', true)
         this.$store.dispatch('loadOfflineMeetups')

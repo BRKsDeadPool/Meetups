@@ -1,8 +1,7 @@
 <script>
-  import VBtn from "vuetify/src/components/buttons/VBtn";
   import {random} from 'lodash'
   export default {
-    components: {VBtn}, computed: {
+   computed: {
       meetups() {
         return this.$store.getters.loadedMeetups
       }
@@ -19,6 +18,8 @@
       getColor(meetup, i) {
         let colors = [
           'blue',
+          'red',
+          'green'
         ]
 
 
@@ -52,7 +53,7 @@
                   </div>
                 </v-card-title>
                 <v-card-actions>
-                  <v-btn flat @click.native="goTo(meetup.id)">
+                  <v-btn flat @click="goTo(meetup.id)">
                     <v-icon left>arrow_forward</v-icon>
                     <span>Detalhes do rolê</span>
                   </v-btn>
@@ -83,7 +84,7 @@
             <v-layout row>
               <v-flex xs12>
                 <v-card-actions>
-                  <v-btn flat block @click.native="goTo(meetup.id)">
+                  <v-btn flat block @click="goTo(meetup.id)">
                     <v-icon left>arrow_forward</v-icon>
                     <span>Detalhes do rolê</span>
                   </v-btn>

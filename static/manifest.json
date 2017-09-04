@@ -11,6 +11,11 @@
       "src": "/static/img/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/static/img/icons/msapplication-icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
     }
   ],
   "start_url": "/",

@@ -19,12 +19,12 @@
         if (this.authUser) {
           items = [
             {title: 'Ver Rolês', icon: 'supervisor_account', to: '/meetups'},
-            {title: 'Perfil', icon: 'person', to: '/profile'}
           ]
 
           if (this.online) {
             items.push({title: 'Organizar Rolê', icon: 'room', to: '/meetup/new'})
           }
+          items.push({title: 'Perfil', icon: 'person', to: '/profile'})
         }
         return items
       },
@@ -53,9 +53,6 @@
           </v-list-tile-action>
           <v-list-tile-content>
             {{ item.title }}
-
-
-
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-show="authUser" @click="logout">
@@ -64,9 +61,6 @@
           </v-list-tile-action>
           <v-list-tile-content>
             Sair
-
-
-
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -81,9 +75,6 @@
         <v-btn v-for="(item, i) in items" :key="i" flat :to="item.to">
           <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
-
-
-
         </v-btn>
         <v-btn flat v-show="authUser" @click="logout" v-if="online">
           <v-icon left dark>exit_to_app</v-icon>

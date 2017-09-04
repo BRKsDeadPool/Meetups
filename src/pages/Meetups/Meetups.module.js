@@ -11,6 +11,21 @@ export default {
     },
     SET_MEETUPS(state, payload) {
       state.loadedMeetups = payload
+    },
+    UPDATE_MEETUP(state, payload) {
+      let meetup = state.loadedMeetups.find(meetup => {
+        return meetup.id === payload.id
+      })
+      let {title, description, date} = payload
+      if (title) {
+        meetup['title'] = title
+      }
+      if (description) {
+        meetup['description'] = description
+      }
+      if (date) {
+        meetup['date'] = date
+      }
     }
   },
   actions: {
@@ -22,7 +37,7 @@ export default {
           const meetups = [];
           const obj = data
           for (let id in obj) {
-            let {description, imageUrl, date, location, title, image} = obj[id];
+            let {description, imageUrl, date, location, title, image, creatorId} = obj[id];
 
             imageUrl = window.URL.createObjectURL(image)
 
@@ -32,7 +47,8 @@ export default {
               title,
               location,
               imageUrl,
-              date
+              date,
+              creatorId
             })
           }
           commit('SET_MEETUPS', meetups);
@@ -53,18 +69,19 @@ export default {
           const meetups = [];
           const obj = data.val();
           for (let id in obj) {
-            let {description, imageUrl, date, location, title} = obj[id];
+            let {description, imageUrl, date, location, title, creatorId} = obj[id];
             let meetup = {
               id,
               description,
               title,
               location,
               imageUrl,
-              date
+              date,
+              creatorId
             }
             meetups.push(meetup)
           }
-          meetups.slice(Math.max(meetups.length - 10, 0)).forEach(meetup => {
+          meetups.slice(meetups.length - 25).forEach(meetup => {
             dispatch('cacheOldMeetup', meetup)
           })
           commit('SET_MEETUPS', meetups);
@@ -83,7 +100,7 @@ export default {
           location,
           description,
           date: date.toISOString(),
-          creatorId: getters.user.uid
+          creatorId: getters.user.id
         };
         let imageUrl, key;
 
@@ -112,7 +129,8 @@ export default {
             };
             commit('ADD_MEETUP', commitPayload);
 
-            dispatch('cacheMeetup', commitPayload)
+            dispatch('cacheMeetup', {payload: commitPayload, key: 'myMeetups'})
+            dispatch('cacheMeetup', {payload: commitPayload})
               .then(resolve)
               .catch(console.error)
           })
@@ -120,48 +138,73 @@ export default {
       })
     },
     cacheOldMeetup({dispatch}, payload) {
-      // fetch(payload.imageUrl, {mode: 'no-cors'})
-      //   .then(res => {
-      //     return res.blob()
-      //   })
-      //   .then(blob => {
-      //     dispatch('cacheMeetup', {...payload, image: blob})
-      //   })
-      firebase.storage()
-        .ref('images/' + payload.id)
-        .getDownloadURL()
-        .then(url => {
-          fetch(url, {method: 'GET'})
-            .then(res => {
-              console.log(res)
-            })
+      fetch(payload.imageUrl)
+        .then(res => {
+          return res.blob()
+        })
+        .then(blob => {
+          payload = {...payload, image: blob}
+          dispatch('cacheMeetup', {payload})
         })
     },
-    cacheMeetup(context, payload) {
+    cacheMeetup(context, {payload, key}) {
+      key = key || 'loadedMeetups'
+
       return new Promise((resolve, reject) => {
         try {
-          lf.getItem('loadedMeetups')
+          lf.getItem(key)
             .then(data => {
               let {image} = payload
               let meetups = data
+              let oldMeetup = meetups.find(meetup => meetup.id === payload['id'])
               if (payload['image'].constructor === File) {
                 payload['image'] = new Blob([payload['image']])
               }
-              if (meetups.find(meetup => meetup.id === payload['id'])){
-                return resolve()
+              if (oldMeetup) {
+                meetups[meetups.indexOf(oldMeetup)] = payload
+              } else {
+                if (meetups.length > 25) {
+                  meetups.shift()
+                }
+                meetups.push(payload)
               }
-              if (meetups.length > 9) {
-                meetups.shift()
-              }
-              meetups.push(payload)
 
-              lf.setItem('loadedMeetups', meetups)
+              lf.setItem(key, meetups)
                 .then(resolve)
             })
         } catch (e) {
           reject(e)
         }
       })
+    },
+    updateMeetup({commit, getters, dispatch}, payload) {
+      commit('SET_LOADING', true)
+      const updateObj = {}
+      const {title, description, date, id} = payload
+
+      if (title) {
+        updateObj['title'] = title
+      }
+      if (description) {
+        updateObj['description'] = description
+      }
+      if (date) {
+        updateObj['date'] = date
+      }
+
+      firebase.database()
+        .ref('meetups')
+        .child(id)
+        .update(updateObj)
+        .then(() => {
+          commit('SET_LOADING', false)
+          commit('UPDATE_MEETUP', payload)
+          dispatch('cacheOldMeetup', payload)
+        })
+        .catch(err => {
+          console.log(err)
+          commit('SET_LOADING', false)
+        })
     }
   },
   getters: {
